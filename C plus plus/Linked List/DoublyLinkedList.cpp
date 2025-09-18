@@ -9,11 +9,10 @@ struct Node
   Node * next ;
 };
 
-
-
 struct DoublyLinkedList
 {
   Node * head ;
+  Node * tail ;
   
   DoublyLinkedList() : head(NULL) {}
 
@@ -41,20 +40,10 @@ struct DoublyLinkedList
 
   void insertion_tail(int val){
     Node * newNode = new Node() ;
+    newNode->prev = tail ;
     newNode->info = val ;
     newNode->next = NULL ;
-    if (head == NULL)
-    {
-      newNode->prev = NULL ;
-      head = newNode ; 
-      return ;
-    }
-    Node * temp = head ;
-    while (temp->next != NULL){
-      temp = temp->next ;
-    }
-    temp->next = newNode ;
-    newNode->prev = temp ;
+    tail = newNode ;
   }
 
   void insertion_atPos(int pos , int val){
@@ -99,13 +88,10 @@ struct DoublyLinkedList
       head = NULL;
       return ;
     }
-    Node* temp = head ; 
-    while (temp->next->next != NULL){
-      temp = temp->next ; 
-    }
-    // temp->next->prev = NULL ; // Not needed
-    delete temp->next ;
-    temp -> next = NULL ;
+    Node * temp = tail ;
+    tail = tail->prev ;
+    tail->next = NULL ;
+    delete temp ;
   }
 
   void deletion_atPos(int pos){
@@ -124,12 +110,9 @@ struct DoublyLinkedList
       cout << "Postion out of bounds"<< endl ;
       return ;
     }
-    Node * toDelete = temp -> next ;
-    if (toDelete->next != NULL) {
-      toDelete -> next ->prev = temp ; 
-    }
-    temp -> next = toDelete->next ;
-    delete toDelete ;
+    temp->prev->next = temp->next ;
+    temp->next->prev = temp->prev ;
+    delete temp ;
   }
 };
 
@@ -167,4 +150,5 @@ int main() {
     list.display();
 
     return 0;
+
 }
